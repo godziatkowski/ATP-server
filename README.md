@@ -103,3 +103,18 @@ public class MorseCodeAPI {
 
 }
 ```
+8. Add Swagger to automate documentation of your REST API
+```
+<dependency>
+    <groupId>com.mangofactory</groupId>
+    <artifactId>swagger-springmvc</artifactId>
+    <version>1.0.2</version>
+</dependency>
+<dependency>
+    <groupId>org.ajar</groupId>
+    <artifactId>swagger-spring-mvc-ui</artifactId>
+    <version>0.4</version>
+</dependency>
+```
+9. Annotate you application class with @EnableSwagger to publish documentation of your API
+10. Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
