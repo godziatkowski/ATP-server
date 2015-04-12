@@ -11,4 +11,6 @@
  * Data: JPA
  * Database: H2
 0. Genereate and download you project starter
+0. After unpack you can build you project with command _mvn install_
+0. When all required dependencies are downloaded and your project builds with success you can start it with command _mvn spring-boot:run_
 
