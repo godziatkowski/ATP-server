@@ -1,22 +1,22 @@
 # ATP-server
 
 # Start new project #
-1. Go to [Spring initializer](https://start.spring.io/)
-2. Prepare you project metadata:
+- Go to [Spring initializer](https://start.spring.io/)
+- Prepare you project metadata:
  * Type: Maven project
  * Packaging: JAR
  * Java Version: 1.8
  * Spring boot version: 1.2.3
-3. Select project dependencies:
+- Select project dependencies:
  * Web: Web
  * Data: JPA
  * Database: H2
-4. Genereate and download you project starter
-5. After unpack you can build you project with command __mvn install__
-6. When all required dependencies are downloaded and your project builds with success you can start it with command __mvn spring-boot:run__. Run it to check everything works as expected
+- Genereate and download you project starter
+- After unpack you can build you project with command __mvn install__
+- When all required dependencies are downloaded and your project builds with success you can start it with command __mvn spring-boot:run__. Run it to check everything works as expected
 
 # Integrate MorseCodeTranslator #
-1. Add to pom.xml dependency of [MorseCodeTranslator](https://github.com/konczak/MorseCodeTranslator) which you should have already download and build localy because its not available through Maven repo
+- Add to pom.xml dependency of [MorseCodeTranslator](https://github.com/konczak/MorseCodeTranslator) which you should have already download and build localy because its not available through Maven repo
 ```xml
 <dependency>
    <groupId>pl.konczak</groupId>
@@ -24,10 +24,10 @@
    <version>1.0</version>
 </dependency>
 ```
-2. Create package _config_ where you should put additional configuration for you Spring boot application
-3. Inform Spring it should search for your custom beans inside you package. Edit your Application.java file and add annotation _@ComponentScan(basePackages = "YOUR-MAIN-PACKAGE-PATH")_
-4. Add inside it new class called BeansConfig and mark it with _@Configuration_ annotation
-5. In BeansConfig register MorseCodeTranslator as bean using code:
+- Create package _config_ where you should put additional configuration for you Spring boot application
+- Inform Spring it should search for your custom beans inside you package. Edit your Application.java file and add annotation _@ComponentScan(basePackages = "YOUR-MAIN-PACKAGE-PATH")_
+- Add inside it new class called BeansConfig and mark it with _@Configuration_ annotation
+- In BeansConfig register MorseCodeTranslator as bean using code:
 ```java
 @Bean
 public IMorseCodeTranslator morseCodeTranslator() {
@@ -36,19 +36,19 @@ public IMorseCodeTranslator morseCodeTranslator() {
 ```
 
 # REST API #
-1. Create packages rest and rest.model
-2. Create new models rest.model.EnglishText and rest.model.MorseCode. Both has only one private field _String value_ with getters and setters
-3. Create REST API class MorseCodeAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/morsecode" what means that main context of this API is /api/morsecode
+- Create packages rest and rest.model
+- Create new models rest.model.EnglishText and rest.model.MorseCode. Both has only one private field _String value_ with getters and setters
+- Create REST API class MorseCodeAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/morsecode" what means that main context of this API is /api/morsecode
 ```java
 @RestController
 @RequestMapping("/api/morsecode")
 ```
-4. Inject IMorseCodeTranslator into our API class because we will use it next steps
+- Inject IMorseCodeTranslator into our API class because we will use it next steps
 ```java
 @Autowired
 private IMorseCodeTranslator morseCodeTranslator;
 ```
-5. Register POST /api/morsecode/encode endpoint which as body of request takes EnglishText and returns MorseCode
+- Register POST /api/morsecode/encode endpoint which as body of request takes EnglishText and returns MorseCode
 ```java
 @RequestMapping(value = "/encode",
                 method = RequestMethod.POST)
@@ -60,7 +60,7 @@ private IMorseCodeTranslator morseCodeTranslator;
     return new ResponseEntity<>(morseCode, HttpStatus.OK);
 }
 ```
-6. Register POST /api/morsecode/decode endpoint which as body of request takes MorseCode and returns EnglishText
+- Register POST /api/morsecode/decode endpoint which as body of request takes MorseCode and returns EnglishText
 ```java
 @RequestMapping(value = "/decode",
                 method = RequestMethod.POST)
@@ -72,7 +72,7 @@ public HttpEntity<EnglishText> decode(@RequestBody MorseCode morseCode) {
     return new ResponseEntity<>(englishText, HttpStatus.OK);
 }
 ```
-7. Final result should be at least similar to that:
+- Final result should be at least similar to that:
 ```java
 @RestController
 @RequestMapping("/api/morsecode")
@@ -103,7 +103,7 @@ public class MorseCodeAPI {
 
 }
 ```
-8. Add Swagger to automate documentation of your REST API
+- Add Swagger to automate documentation of your REST API
 ```xml
 <dependency>
     <groupId>com.mangofactory</groupId>
@@ -116,15 +116,15 @@ public class MorseCodeAPI {
     <version>0.4</version>
 </dependency>
 ```
-9. Annotate you application class with @EnableSwagger to publish documentation of your API
-10. Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
+- Annotate you application class with @EnableSwagger to publish documentation of your API
+- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
 
 # Save your data in database #
-1. Create package db, db.entity, db.repo
-2. Create new entity rest.model.Translation implements _Serializable_ and has private fields _long id_, _String englishText_, _String morseCode_, _LocalDateTime createdAt_ and getters
-3. To make Translation class proper entity annotate class with _@Entity_ and field _long id_ with _@Id_ and _@GeneratedValue(strategy = GenerationType.AUTO)_
-4. Add protected constructor without arguments so Hibernate could use it
-5. Add public constructor with arguments EnglishText and MorseCode and assign their values to proper fields. Also initialize field createdAt with actual date
+- Create package db, db.entity, db.repo
+- Create new entity rest.model.Translation implements _Serializable_ and has private fields _long id_, _String englishText_, _String morseCode_, _LocalDateTime createdAt_ and getters
+- To make Translation class proper entity annotate class with _@Entity_ and field _long id_ with _@Id_ and _@GeneratedValue(strategy = GenerationType.AUTO)_
+- Add protected constructor without arguments so Hibernate could use it
+- Add public constructor with arguments EnglishText and MorseCode and assign their values to proper fields. Also initialize field createdAt with actual date
 ```java
 @Entity
 public class Translation {
@@ -164,37 +164,37 @@ public class Translation {
         return createdAt;
     }
 ```
-6. Create new repository db.repo.ITranslationRepository which extends JpaRepository<Translation, Long>
-7. Add in MorseCodeAPI new filed which will be injected by Spring _ITranslationRepository translationRepository_
+- Create new repository db.repo.ITranslationRepository which extends JpaRepository<Translation, Long>
+- Add in MorseCodeAPI new filed which will be injected by Spring _ITranslationRepository translationRepository_
 ```java
 @Autowired
 private ITranslationRepository translationRepository;
 ```
-7. Modify MorseCodeAPI endpoint encode and decode to save new translations using ITranslationRepository
+- Modify MorseCodeAPI endpoint encode and decode to save new translations using ITranslationRepository
 ```java
 Translation translation = new Translation(englishText, morseCode);
 translationRepository.save(translation);
 ```
 
 # Expose your entity through REST API #
-1. Create REST API class TranslationAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/translation" what means that main context of this API is /api/translation
+- Create REST API class TranslationAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/translation" what means that main context of this API is /api/translation
 ```java
 @RestController
 @RequestMapping("/api/translation")
 ```
-4. Inject ITranslationRepository into our API class because we will use it next steps
+- Inject ITranslationRepository into our API class because we will use it next steps
 ```java
 @Autowired
 private ITranslationRepository translationRepository;
 ```
-5. Register GET /api/translation endpoint which returns List of all Translation
+- Register GET /api/translation endpoint which returns List of all Translation
 ```java
 @RequestMapping(method = RequestMethod.GET)
     public List<Translation> list() {
     return translationRepository.findAll();
 }
 ```
-6. Register GET /api/translation/{transationId} endpoint which takes ID and returns proper Translation
+- Register GET /api/translation/{transationId} endpoint which takes ID and returns proper Translation
 ```java
 @RequestMapping(value = "/api/translation/{translationId}",
                 method = RequestMethod.GET)
@@ -208,7 +208,7 @@ public HttpEntity<Translation> get(@PathVariable long translationId) {
     }
 }
 ```
-7. Final result should be at least similar to that:
+- Final result should be at least similar to that:
 ```java
 @RestController
 @RequestMapping("/api/translation")
@@ -235,4 +235,4 @@ public class TranslationAPI {
     }
 }
 ```
-8. Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) use encode or decode endpoint and next serch for all Translations. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
+- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) use encode or decode endpoint and next serch for all Translations. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
