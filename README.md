@@ -36,9 +36,9 @@ public IMorseCodeTranslator morseCodeTranslator() {
 ```
 
 # REST API #
-- Create packages rest and rest.model
-- Create new models rest.model.EnglishText and rest.model.MorseCode. Both has only one private field _String value_ with getters and setters
-- Create REST API class MorseCodeAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/morsecode" what means that main context of this API is /api/morsecode
+- Create packages _rest_ and _rest.model_
+- Create new models _rest.model.EnglishText_ and _rest.model.MorseCode_. Both has only one private field _String value_ with getters and setters
+- Create REST API class MorseCodeAPI with annotation _@RestController_ to inform Spring that class will serve some API. Also add _@RequestMapping_ annotation with value _"/api/morsecode"_ what means that main context of this API is /api/morsecode
 ```java
 @RestController
 @RequestMapping("/api/morsecode")
@@ -116,12 +116,13 @@ public class MorseCodeAPI {
     <version>0.4</version>
 </dependency>
 ```
-- Annotate you application class with @EnableSwagger to publish documentation of your API
-- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
+- Annotate you application class with _@EnableSwagger_ to publish documentation of your API
+- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints.
+__Note:__ You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
 
 # Save your data in database #
-- Create package db, db.entity, db.repo
-- Create new entity rest.model.Translation implements _Serializable_ and has private fields _long id_, _String englishText_, _String morseCode_, _LocalDateTime createdAt_ and getters
+- Create package _db_, _db.entity_, _db.repo_
+- Create new entity _rest.model.Translation_ which implements _Serializable_ and has private fields _long id_, _String englishText_, _String morseCode_, _LocalDateTime createdAt_ and getters
 - To make Translation class proper entity annotate class with _@Entity_ and field _long id_ with _@Id_ and _@GeneratedValue(strategy = GenerationType.AUTO)_
 - Add protected constructor without arguments so Hibernate could use it
 - Add public constructor with arguments EnglishText and MorseCode and assign their values to proper fields. Also initialize field createdAt with actual date
@@ -164,20 +165,20 @@ public class Translation {
         return createdAt;
     }
 ```
-- Create new repository db.repo.ITranslationRepository which extends JpaRepository<Translation, Long>
+- Create new repository _db.repo.ITranslationRepository_ which extends _JpaRepository<Translation, Long>_
 - Add in MorseCodeAPI new filed which will be injected by Spring _ITranslationRepository translationRepository_
 ```java
 @Autowired
 private ITranslationRepository translationRepository;
 ```
-- Modify MorseCodeAPI endpoint encode and decode to save new translations using ITranslationRepository
+- Modify MorseCodeAPI endpoint encode and decode to save new translations using _ITranslationRepository_
 ```java
 Translation translation = new Translation(englishText, morseCode);
 translationRepository.save(translation);
 ```
 
 # Expose your entity through REST API #
-- Create REST API class TranslationAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/translation" what means that main context of this API is /api/translation
+- Create REST API class TranslationAPI with annotation _@RestController_ to inform Spring that class will serve some API. Also add _@RequestMapping_ annotation with value _"/api/translation"_ what means that main context of this API is /api/translation
 ```java
 @RestController
 @RequestMapping("/api/translation")
@@ -235,4 +236,5 @@ public class TranslationAPI {
     }
 }
 ```
-- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) use encode or decode endpoint and next serch for all Translations. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
+- Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) use encode or decode endpoint and next serch for all Translations.
+__Note:__ You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
