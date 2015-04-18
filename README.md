@@ -176,3 +176,63 @@ Translation translation = new Translation(englishText, morseCode);
 translationRepository.save(translation);
 ```
 
+# Expose your entity through REST API #
+1. Create REST API class TranslationAPI with annotation @RestController to inform Spring that class will serve some API. Also add @RequestMapping annotation with value "/api/translation" what means that main context of this API is /api/translation
+```java
+@RestController
+@RequestMapping("/api/translation")
+```
+4. Inject ITranslationRepository into our API class because we will use it next steps
+```java
+@Autowired
+private ITranslationRepository translationRepository;
+```
+5. Register GET /api/translation endpoint which returns List of all Translation
+```java
+@RequestMapping(method = RequestMethod.GET)
+    public List<Translation> list() {
+    return translationRepository.findAll();
+}
+```
+6. Register GET /api/translation/{transationId} endpoint which takes ID and returns proper Translation
+```java
+@RequestMapping(value = "/api/translation/{translationId}",
+                method = RequestMethod.GET)
+public HttpEntity<Translation> get(@PathVariable long translationId) {
+    Translation translation = translationRepository.findOne(translationId);
+
+    if (translation == null) {
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    } else {
+        return new ResponseEntity<>(translation, HttpStatus.OK);
+    }
+}
+```
+7. Final result should be at least similar to that:
+```java
+@RestController
+@RequestMapping("/api/translation")
+public class TranslationAPI {
+
+    @Autowired
+    private ITranslationRepository translationRepository;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<Translation> list() {
+        return translationRepository.findAll();
+    }
+
+    @RequestMapping(value = "/api/translation/{translationId}",
+                    method = RequestMethod.GET)
+    public HttpEntity<Translation> get(@PathVariable long translationId) {
+        Translation translation = translationRepository.findOne(translationId);
+
+        if (translation == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(translation, HttpStatus.OK);
+        }
+    }
+}
+```
+8. Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) use encode or decode endpoint and next serch for all Translations. Note: You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
