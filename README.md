@@ -116,6 +116,16 @@ public class MorseCodeAPI {
     <version>0.4</version>
 </dependency>
 ```
+- Add additional Maven repository where swagger-spring-mvc-ui is stored
+```xml
+    <repositories>
+        <repository>
+            <id>oss-jfrog-artifactory</id>
+            <name>oss-jfrog-artifactory-releases</name>
+            <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+        </repository>
+    </repositories>
+```
 - Annotate you application class with _@EnableSwagger_ to publish documentation of your API
 - Run your application using __mvn spring-boot:run__ when it is ready open [documentation](http://localhost:8080/sdoc.jsp) - try to use your endpoints.
 __Note:__ You have to remove ${pageContext.request.contextPath} from generated Swagger documentation.
