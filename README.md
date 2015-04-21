@@ -115,6 +115,10 @@ public class MorseCodeAPI {
     <artifactId>swagger-spring-mvc-ui</artifactId>
     <version>0.4</version>
 </dependency>
+<dependency>
+    <groupId>org.apache.tomcat.embed</groupId>
+    <artifactId>tomcat-embed-jasper</artifactId>
+</dependency>
 ```
 - Add additional Maven repository where swagger-spring-mvc-ui is stored
 ```xml
